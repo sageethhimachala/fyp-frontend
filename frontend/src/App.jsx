@@ -11,7 +11,7 @@ export default function App() {
   useEffect(() => {
     fetch("/10GS.json")
       .then((res) => res.json())
-      .then((json) => setData(json));
+      .then((data) => setData(data));
   }, []);
 
   if (!data)
@@ -34,20 +34,64 @@ export default function App() {
 
   return (
     <div style={{ padding: 10, fontFamily: "Arial, sans-serif" }}>
-      <h2>MISATO Protein–Ligand Viewer</h2>
+      <h2>GraphMD Viewer</h2>
       <p>PDB ID: {data.pdbId}</p>
 
       {data.md_frames?.length > 0 && (
         <div style={{ marginBottom: 16 }}>
-          <label>Frame: {frameIndex}</label>
+          <label>Frame: </label>
+          <button
+            type="button"
+            disabled={frameIndex === 0}
+            onClick={() => setFrameIndex((prev) => Math.max(0, prev - 1))}
+            style={{
+              opacity: frameIndex === 0 ? 0.4 : 1,
+              cursor: frameIndex === 0 ? "not-allowed" : "pointer",
+            }}
+          >
+            −
+          </button>
+
           <input
-            type="range"
+            type="number"
             min="0"
             max={data.md_frames.length - 1}
             value={frameIndex}
-            onChange={(e) => setFrameIndex(Number(e.target.value))}
-            style={{ width: "300px", marginLeft: 12 }}
+            style={{
+              padding: "0 0 0 12px",
+              textAlign: "center",
+              margin: "0px 5px 0px 5px",
+            }}
+            onChange={(e) => {
+              const value = Number(e.target.value);
+              if (
+                !isNaN(value) &&
+                value >= 0 &&
+                value <= data.md_frames.length - 1
+              ) {
+                setFrameIndex(value);
+              }
+            }}
           />
+
+          <button
+            type="button"
+            disabled={frameIndex === data.md_frames.length - 1}
+            onClick={() =>
+              setFrameIndex((prev) =>
+                Math.min(data.md_frames.length - 1, prev + 1),
+              )
+            }
+            style={{
+              opacity: frameIndex === data.md_frames.length - 1 ? 0.4 : 1,
+              cursor:
+                frameIndex === data.md_frames.length - 1
+                  ? "not-allowed"
+                  : "pointer",
+            }}
+          >
+            +
+          </button>
         </div>
       )}
 
@@ -58,7 +102,11 @@ export default function App() {
           gap: 20,
         }}
       >
-        <ProteinLigandViewer pdbData={pdbData} />
+        <ProteinLigandViewer
+          pdbData={pdbData}
+          atoms={atoms}
+          selectedAtomIndex={selectedAtomIndex}
+        />
         <AtomGrid
           atoms={atoms}
           selectedAtomIndex={selectedAtomIndex}
