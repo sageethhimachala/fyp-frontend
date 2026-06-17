@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import ProteinLigandViewer from "./assets/ProteinLigandViewer";
-import AtomGrid from "./assets/AtomGrid";
-import { atomsToPDB } from "./assets/atomsToPDB";
+import ProteinLigandViewer from "./components/ProteinLigandViewer";
+import AtomGrid from "./components/AtomGrid";
+import { atomsToPDB } from "./components/atomsToPDB";
 import Landing from "./Landing";
 import HistoryPage from "./HistoryPage";
 import PredictionsPage from "./PredictionsPage";
