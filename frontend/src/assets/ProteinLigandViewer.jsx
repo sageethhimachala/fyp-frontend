@@ -22,7 +22,8 @@ export default function ProteinLigandViewer({
     const viewer = viewerRef.current;
     let savedView = null;
     try {
-      if (viewer && typeof viewer.getView === "function") savedView = viewer.getView();
+      if (viewer && typeof viewer.getView === "function")
+        savedView = viewer.getView();
     } catch (e) {
       savedView = null;
     }

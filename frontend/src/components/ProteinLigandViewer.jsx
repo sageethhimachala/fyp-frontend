@@ -23,7 +23,8 @@ export default function ProteinLigandViewer({
     // try to preserve current view (rotation/zoom) if API available
     let savedView = null;
     try {
-      if (viewer && typeof viewer.getView === "function") savedView = viewer.getView();
+      if (viewer && typeof viewer.getView === "function")
+        savedView = viewer.getView();
     } catch (e) {
       savedView = null;
     }
