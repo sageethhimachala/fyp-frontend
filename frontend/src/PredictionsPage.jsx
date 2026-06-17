@@ -22,7 +22,6 @@ export default function PredictionsPage() {
         borderRadius: 8,
       }}
     >
-      <h2 style={{ color: "#fff" }}>Predictions</h2>
       <p style={{ color: "#cbd6e3" }}>
         This widget will call an ML API to compute predictions.
       </p>

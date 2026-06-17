@@ -6,6 +6,7 @@ import { atomsToPDB } from "./components/atomsToPDB";
 import Landing from "./Landing";
 import HistoryPage from "./HistoryPage";
 import PredictionsPage from "./PredictionsPage";
+import Header from "./components/Header";
 
 export default function App() {
   const [data, setData] = useState(null);
@@ -36,128 +37,142 @@ export default function App() {
     <BrowserRouter>
       <div
         style={{
-          padding: 10,
+          padding: 0,
           fontFamily: "Arial, sans-serif",
           background: "#0b0f14",
           color: "#e6eef8",
           minHeight: "100vh",
         }}
       >
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route
-            path="/viewer"
-            element={
-              !data ? (
-                <div style={{ padding: 20 }}>Loading MISATO structure...</div>
-              ) : (
-                <div>
-                  <Link to="/">← Back</Link>
-                  <h2>GraphMD Viewer</h2>
-                  <p>PDB ID: {data.pdbId}</p>
+        <Header />
+        <div style={{ padding: 10 }}>
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route
+              path="/viewer"
+              element={
+                !data ? (
+                  <div style={{ padding: 20 }}>Loading MISATO structure...</div>
+                ) : (
+                  <div>
+                    <Link to="/">← Back</Link>
+                    <h2>GraphMD Viewer</h2>
+                    <p>PDB ID: {data.pdbId}</p>
 
-                  {data.md_frames?.length > 0 && (
-                    <div style={{ marginBottom: 16 }}>
-                      <label>Frame: </label>
-                      <button
-                        type="button"
-                        disabled={frameIndex === 0}
-                        onClick={() =>
-                          setFrameIndex((prev) => Math.max(0, prev - 1))
-                        }
-                        style={{
-                          opacity: frameIndex === 0 ? 0.4 : 1,
-                          cursor: frameIndex === 0 ? "not-allowed" : "pointer",
-                        }}
-                      >
-                        −
-                      </button>
+                    {data.md_frames?.length > 0 && (
+                      <div style={{ marginBottom: 16 }}>
+                        <label>Frame: </label>
+                        <button
+                          type="button"
+                          disabled={frameIndex === 0}
+                          onClick={() =>
+                            setFrameIndex((prev) => Math.max(0, prev - 1))
+                          }
+                          style={{
+                            opacity: frameIndex === 0 ? 0.4 : 1,
+                            cursor:
+                              frameIndex === 0 ? "not-allowed" : "pointer",
+                          }}
+                        >
+                          −
+                        </button>
 
-                      <input
-                        type="number"
-                        min="0"
-                        max={data.md_frames.length - 1}
-                        value={frameIndex}
-                        style={{
-                          padding: "0 0 0 12px",
-                          textAlign: "center",
-                          margin: "0px 5px 0px 5px",
-                        }}
-                        onChange={(e) => {
-                          const value = Number(e.target.value);
-                          if (
-                            !isNaN(value) &&
-                            value >= 0 &&
-                            value <= data.md_frames.length - 1
-                          ) {
-                            setFrameIndex(value);
+                        <input
+                          type="number"
+                          min="0"
+                          max={data.md_frames.length - 1}
+                          value={frameIndex}
+                          style={{
+                            padding: "0 0 0 12px",
+                            textAlign: "center",
+                            margin: "0px 5px 0px 5px",
+                          }}
+                          onChange={(e) => {
+                            const value = Number(e.target.value);
+                            if (
+                              !isNaN(value) &&
+                              value >= 0 &&
+                              value <= data.md_frames.length - 1
+                            ) {
+                              setFrameIndex(value);
+                            }
+                          }}
+                        />
+
+                        <button
+                          type="button"
+                          disabled={frameIndex === data.md_frames.length - 1}
+                          onClick={() =>
+                            setFrameIndex((prev) =>
+                              Math.min(data.md_frames.length - 1, prev + 1),
+                            )
+                          }
+                          style={{
+                            opacity:
+                              frameIndex === data.md_frames.length - 1
+                                ? 0.4
+                                : 1,
+                            cursor:
+                              frameIndex === data.md_frames.length - 1
+                                ? "not-allowed"
+                                : "pointer",
+                          }}
+                        >
+                          +
+                        </button>
+                      </div>
+                    )}
+
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "3fr 1fr",
+                        gap: 20,
+                      }}
+                    >
+                      <ProteinLigandViewer
+                        pdbData={pdbData}
+                        atoms={atoms}
+                        selectedAtomIndex={selectedAtomIndex}
+                      />
+
+                      <AtomGrid
+                        atoms={atoms}
+                        selectedAtomIndex={selectedAtomIndex}
+                        onSelectAtom={(index) => {
+                          if (selectedAtomIndex === index) {
+                            // same atom clicked again -> clear selection
+                            setSelectedAtomIndex(null);
+                          } else {
+                            setSelectedAtomIndex(index);
                           }
                         }}
                       />
-
-                      <button
-                        type="button"
-                        disabled={frameIndex === data.md_frames.length - 1}
-                        onClick={() =>
-                          setFrameIndex((prev) =>
-                            Math.min(data.md_frames.length - 1, prev + 1),
-                          )
-                        }
-                        style={{
-                          opacity:
-                            frameIndex === data.md_frames.length - 1 ? 0.4 : 1,
-                          cursor:
-                            frameIndex === data.md_frames.length - 1
-                              ? "not-allowed"
-                              : "pointer",
-                        }}
-                      >
-                        +
-                      </button>
                     </div>
-                  )}
-
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "3fr 1fr",
-                      gap: 20,
-                    }}
-                  >
-                    <ProteinLigandViewer
-                      pdbData={pdbData}
-                      atoms={atoms}
-                      selectedAtomIndex={selectedAtomIndex}
-                    />
-                    <AtomGrid
-                      atoms={atoms}
-                      selectedAtomIndex={selectedAtomIndex}
-                      onSelectAtom={setSelectedAtomIndex}
-                    />
                   </div>
+                )
+              }
+            />
+            <Route
+              path="/history"
+              element={
+                <div>
+                  <Link to="/">← Back</Link>
+                  <HistoryPage />
                 </div>
-              )
-            }
-          />
-          <Route
-            path="/history"
-            element={
-              <div>
-                <Link to="/">← Back</Link>
-                <HistoryPage />
-              </div>
-            }
-          />
-          <Route
-            path="/predictions"
-            element={
-              <div>
-                <Link to="/">← Back</Link>
-                <PredictionsPage />
-              </div>
-            }
-          />
-        </Routes>
+              }
+            />
+            <Route
+              path="/predictions"
+              element={
+                <div>
+                  <Link to="/">← Back</Link>
+                  <PredictionsPage />
+                </div>
+              }
+            />
+          </Routes>
+        </div>
       </div>
     </BrowserRouter>
   );

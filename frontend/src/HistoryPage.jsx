@@ -10,7 +10,6 @@ export default function HistoryPage() {
         borderRadius: 8,
       }}
     >
-      <h2 style={{ color: "#ffffff" }}>History</h2>
       <p style={{ color: "#cbd6e3" }}>
         This page will list past analyses, file uploads and prediction runs.
       </p>

@@ -80,13 +80,15 @@ export default function ProteinLigandViewer({
       // highlight the selected atom with a sphere and slightly thinner sticks
       viewer.setStyle(
         { serial },
-        { sphere: { radius: 0.3, color: "red" }, stick: { radius: 0.12 } },
+        { sphere: { radius: 0.3, color: "green" }, stick: { radius: 0.12 } },
       );
-      // Do not call zoomTo here to avoid changing camera/zoom on selection
+      // Do not call zoomTo here to avoid changing zoom on selection
     }
 
     viewer.render();
   }, [selectedAtomIndex, atoms]);
+
+  // no-op: selection updates handled by selectedAtomIndex effect
 
   return (
     <div
