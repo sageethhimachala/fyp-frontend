@@ -20,7 +20,6 @@ export default function ProteinLigandViewer({
     }
 
     const viewer = viewerRef.current;
-    // try to preserve current view (rotation/zoom) if API available
     let savedView = null;
     try {
       if (viewer && typeof viewer.getView === "function") savedView = viewer.getView();
@@ -32,7 +31,6 @@ export default function ProteinLigandViewer({
     viewer.addModel(pdbData, "pdb");
     viewer.setStyle({}, { stick: { radius: 0.18 } });
 
-    // restore view if we saved one
     try {
       if (savedView && typeof viewer.setView === "function") {
         viewer.setView(savedView);
@@ -63,13 +61,11 @@ export default function ProteinLigandViewer({
     if (selectedAtomIndex !== null && atoms[selectedAtomIndex]) {
       const atom = atoms[selectedAtomIndex];
       const serial = Number(atom.serial ?? selectedAtomIndex + 1);
-
-      // highlight the selected atom with a sphere and slightly thinner sticks
       viewer.setStyle(
         { serial },
         { sphere: { radius: 0.3, color: "red" }, stick: { radius: 0.12 } },
       );
-      // Do not call zoomTo here to avoid changing camera/zoom on selection
+      // do not zoom to keep camera stable on selection
     }
 
     viewer.render();

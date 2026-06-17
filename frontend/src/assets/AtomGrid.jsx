@@ -33,7 +33,10 @@ export default function AtomGrid({ atoms, selectedAtomIndex, onSelectAtom }) {
             return (
               <tr
                 key={index}
-                onClick={() => onSelectAtom && onSelectAtom(index === selectedAtomIndex ? null : index)}
+                onClick={() =>
+                  onSelectAtom &&
+                  onSelectAtom(index === selectedAtomIndex ? null : index)
+                }
                 style={{
                   background: selected ? "#dff1ff" : "white",
                   cursor: "pointer",
