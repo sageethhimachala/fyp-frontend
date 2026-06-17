@@ -13,10 +13,12 @@ export default function ProteinLigandViewer({
   useEffect(() => {
     if (!containerRef.current || !window.$3Dmol || !pdbData) return;
 
-    if (!viewerRef.current) {
+    const viewerJustCreated = !viewerRef.current;
+    if (viewerJustCreated) {
       viewerRef.current = window.$3Dmol.createViewer(containerRef.current, {
         backgroundColor: "#071018",
       });
+      initialLoadedRef.current = false;
     }
 
     const viewer = viewerRef.current;
@@ -32,19 +34,28 @@ export default function ProteinLigandViewer({
     viewer.addModel(pdbData, "pdb");
     viewer.setStyle({}, { stick: { radius: 0.18 } });
 
-    try {
-      if (savedView && typeof viewer.setView === "function") {
-        viewer.setView(savedView);
-      } else if (!initialLoadedRef.current) {
+    if (viewerJustCreated) {
+      try {
         viewer.zoomTo();
         initialLoadedRef.current = true;
+      } catch (e) {
+        /* ignore */
       }
-    } catch (e) {
-      if (!initialLoadedRef.current) {
-        try {
+    } else {
+      try {
+        if (savedView && typeof viewer.setView === "function") {
+          viewer.setView(savedView);
+        } else if (!initialLoadedRef.current) {
           viewer.zoomTo();
           initialLoadedRef.current = true;
-        } catch (e2) {}
+        }
+      } catch (e) {
+        if (!initialLoadedRef.current) {
+          try {
+            viewer.zoomTo();
+            initialLoadedRef.current = true;
+          } catch (e2) {}
+        }
       }
     }
 
