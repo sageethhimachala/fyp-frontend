@@ -55,8 +55,6 @@ export default function App() {
                   <div style={{ padding: 20 }}>Loading MISATO structure...</div>
                 ) : (
                   <div>
-                    <Link to="/">← Back</Link>
-                    <h2>GraphMD Viewer</h2>
                     <p>PDB ID: {data.pdbId}</p>
 
                     {data.md_frames?.length > 0 && (
@@ -153,24 +151,8 @@ export default function App() {
                 )
               }
             />
-            <Route
-              path="/history"
-              element={
-                <div>
-                  <Link to="/">← Back</Link>
-                  <HistoryPage />
-                </div>
-              }
-            />
-            <Route
-              path="/predictions"
-              element={
-                <div>
-                  <Link to="/">← Back</Link>
-                  <PredictionsPage />
-                </div>
-              }
-            />
+            <Route path="/history" element={<HistoryPage />} />
+            <Route path="/predictions" element={<PredictionsPage />} />
           </Routes>
         </div>
       </div>
