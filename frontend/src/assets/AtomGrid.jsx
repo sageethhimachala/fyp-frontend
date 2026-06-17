@@ -4,14 +4,16 @@ export default function AtomGrid({ atoms, selectedAtomIndex, onSelectAtom }) {
       style={{
         height: "620px",
         overflow: "auto",
-        border: "1px solid #ddd",
+        border: "1px solid #23303a",
         borderRadius: 12,
+        background: "#071018",
+        color: "#e6eef8",
       }}
     >
       <table
         style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}
       >
-        <thead style={{ position: "sticky", top: 0, background: "#f4f4f4" }}>
+        <thead style={{ position: "sticky", top: 0, background: "#071722" }}>
           <tr>
             <th style={th}>#</th>
             <th style={th}>Atom</th>
@@ -59,10 +61,12 @@ export default function AtomGrid({ atoms, selectedAtomIndex, onSelectAtom }) {
 const th = {
   textAlign: "left",
   padding: "10px",
-  borderBottom: "1px solid #ddd",
+  borderBottom: "1px solid #23303a",
+  color: "#cfe6ff",
 };
 
 const td = {
   padding: "10px",
-  borderBottom: "1px solid #eee",
+  borderBottom: "1px solid #162126",
+  color: "#cfe6ff",
 };

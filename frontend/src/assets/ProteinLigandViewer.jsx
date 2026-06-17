@@ -14,7 +14,7 @@ export default function ProteinLigandViewer({
 
     if (!viewerRef.current) {
       viewerRef.current = window.$3Dmol.createViewer(containerRef.current, {
-        backgroundColor: "white",
+        backgroundColor: "#071018",
       });
     }
 
@@ -65,10 +65,10 @@ export default function ProteinLigandViewer({
       style={{
         width: "100%",
         height: "620px",
-        border: "1px solid #ddd",
+        border: "1px solid #23303a",
         borderRadius: "12px",
         overflow: "hidden",
-        background: "white",
+        background: "#071018",
         position: "relative",
       }}
     />

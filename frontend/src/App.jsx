@@ -34,7 +34,15 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div style={{ padding: 10, fontFamily: "Arial, sans-serif" }}>
+      <div
+        style={{
+          padding: 10,
+          fontFamily: "Arial, sans-serif",
+          background: "#0b0f14",
+          color: "#e6eef8",
+          minHeight: "100vh",
+        }}
+      >
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route
@@ -54,7 +62,9 @@ export default function App() {
                       <button
                         type="button"
                         disabled={frameIndex === 0}
-                        onClick={() => setFrameIndex((prev) => Math.max(0, prev - 1))}
+                        onClick={() =>
+                          setFrameIndex((prev) => Math.max(0, prev - 1))
+                        }
                         style={{
                           opacity: frameIndex === 0 ? 0.4 : 1,
                           cursor: frameIndex === 0 ? "not-allowed" : "pointer",
@@ -94,7 +104,8 @@ export default function App() {
                           )
                         }
                         style={{
-                          opacity: frameIndex === data.md_frames.length - 1 ? 0.4 : 1,
+                          opacity:
+                            frameIndex === data.md_frames.length - 1 ? 0.4 : 1,
                           cursor:
                             frameIndex === data.md_frames.length - 1
                               ? "not-allowed"
@@ -109,12 +120,20 @@ export default function App() {
                   <div
                     style={{
                       display: "grid",
-                      gridTemplateColumns: "1.3fr 1.8fr",
+                      gridTemplateColumns: "3fr 1fr",
                       gap: 20,
                     }}
                   >
-                    <ProteinLigandViewer pdbData={pdbData} atoms={atoms} selectedAtomIndex={selectedAtomIndex} />
-                    <AtomGrid atoms={atoms} selectedAtomIndex={selectedAtomIndex} onSelectAtom={setSelectedAtomIndex} />
+                    <ProteinLigandViewer
+                      pdbData={pdbData}
+                      atoms={atoms}
+                      selectedAtomIndex={selectedAtomIndex}
+                    />
+                    <AtomGrid
+                      atoms={atoms}
+                      selectedAtomIndex={selectedAtomIndex}
+                      onSelectAtom={setSelectedAtomIndex}
+                    />
                   </div>
                 </div>
               )
