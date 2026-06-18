@@ -1,4 +1,4 @@
-import React from "react";
+import { Search } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
 export default function Header() {
@@ -60,7 +60,7 @@ export default function Header() {
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
         <input
-          placeholder="QUERY SEQUENCES..."
+          placeholder="PDB ID"
           style={{
             background: "#071018",
             border: "1px solid #142128",
@@ -70,15 +70,23 @@ export default function Header() {
             outline: "none",
           }}
         />
-        <div
+
+        <button
           style={{
-            width: 36,
-            height: 36,
+            background: "#0f6d8c",
+            border: "1px solid #1b8db3",
+            color: "#c6f7ff",
+            width: 35,
+            height: 35,
             borderRadius: 8,
-            background: "#071018",
-            border: "1px solid #142128",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
-        />
+        >
+          <Search size={18} strokeWidth={2.2} />
+        </button>
       </div>
     </div>
   );

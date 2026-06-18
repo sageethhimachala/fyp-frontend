@@ -55,8 +55,6 @@ export default function App() {
                   <div style={{ padding: 20 }}>Loading MISATO structure...</div>
                 ) : (
                   <div>
-                    <p>PDB ID: {data.pdbId}</p>
-
                     {data.md_frames?.length > 0 && (
                       <div style={{ marginBottom: 16 }}>
                         <label>Frame: </label>
