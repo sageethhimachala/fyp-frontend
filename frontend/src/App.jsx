@@ -57,7 +57,17 @@ export default function App() {
                   <div>
                     {data.md_frames?.length > 0 && (
                       <div style={{ marginBottom: 16 }}>
-                        <label>Frame: </label>
+                        <label
+                          style={{
+                            color: "#c6f7ff",
+                            fontSize: "18px",
+                            fontWeight: 500,
+                            marginRight: "8px",
+                            letterSpacing: "0.5px",
+                          }}
+                        >
+                          FRAME :{" "}
+                        </label>
                         <button
                           type="button"
                           disabled={frameIndex === 0}
@@ -65,9 +75,18 @@ export default function App() {
                             setFrameIndex((prev) => Math.max(0, prev - 1))
                           }
                           style={{
+                            width: "28px",
+                            height: "28px",
+                            background:
+                              frameIndex === 0 ? "#11161c" : "#1c7a9b",
+                            border: "1px solid #2a8fb4",
+                            color: "#ffffff",
+                            borderRadius: "4px",
                             opacity: frameIndex === 0 ? 0.4 : 1,
                             cursor:
                               frameIndex === 0 ? "not-allowed" : "pointer",
+                            fontWeight: "bold",
+                            fontSize: "16px",
                           }}
                         >
                           −
@@ -79,9 +98,17 @@ export default function App() {
                           max={data.md_frames.length - 1}
                           value={frameIndex}
                           style={{
-                            padding: "0 0 0 12px",
+                            width: "70px",
+                            height: "28px",
+                            background: "#071018",
+                            border: "1px solid #142128",
+                            color: "#c6f7ff",
+                            borderRadius: "4px",
                             textAlign: "center",
-                            margin: "0px 5px 0px 5px",
+                            margin: "0 6px",
+                            padding: "0 0 0 11px",
+                            outline: "none",
+                            fontSize: "15px",
                           }}
                           onChange={(e) => {
                             const value = Number(e.target.value);
@@ -104,6 +131,15 @@ export default function App() {
                             )
                           }
                           style={{
+                            width: "28px",
+                            height: "28px",
+                            background:
+                              frameIndex === data.md_frames.length - 1
+                                ? "#11161c"
+                                : "#1c7a9b",
+                            border: "1px solid #2a8fb4",
+                            color: "#ffffff",
+                            borderRadius: "4px",
                             opacity:
                               frameIndex === data.md_frames.length - 1
                                 ? 0.4
@@ -112,6 +148,8 @@ export default function App() {
                               frameIndex === data.md_frames.length - 1
                                 ? "not-allowed"
                                 : "pointer",
+                            fontWeight: "bold",
+                            fontSize: "16px",
                           }}
                         >
                           +
