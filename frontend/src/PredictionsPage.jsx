@@ -94,7 +94,7 @@ export default function PredictionsPage() {
 
   return (
     <div style={{ ...containerStyle }}>
-      <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 18 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "2fr 2fr", gap: 18 }}>
         <div>
           <p
             style={{
@@ -105,7 +105,8 @@ export default function PredictionsPage() {
               fontSize: 15,
             }}
           >
-            Upload target structure and define ligand properties for docking.
+            ENTER TARGET PROTEIN AND LIGAND IDENTIFIERS TO PREDICT BINDING
+            AFFINITY.
           </p>
 
           <div style={cardStyle}>
@@ -118,7 +119,7 @@ export default function PredictionsPage() {
                 fontSize: 12,
               }}
             >
-              Upload structure or query by PDB identifier.
+              ENTER THE PROTEIN STRUCTURE USING A PDB IDENTIFIER.
             </div>
 
             <div
@@ -127,42 +128,23 @@ export default function PredictionsPage() {
                 gap: 12,
                 marginTop: 12,
                 alignItems: "center",
+                justifyContent: "center",
               }}
             >
               <input
-                placeholder="e.g. 10GS"
+                type="text"
+                placeholder="PDB ID (e.g., 6LU7)"
                 value={pdbId}
                 onChange={(e) => setPdbId(e.target.value)}
                 style={{
-                  background: "#0b1a20",
+                  width: "50%",
+                  background: "#071722",
                   color: "#dbeaf6",
-                  border: "1px solid #19303a",
-                  padding: 8,
-                  borderRadius: 4,
-                }}
-              />
-
-              <div
-                style={{
-                  border: "1px dashed #21333a",
+                  border: "1px solid #15303a",
                   padding: 8,
                   borderRadius: 6,
-                  color: "#9fbcc9",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
                 }}
-              >
-                <input
-                  ref={fileRef}
-                  type="file"
-                  accept=".pdb,.mol2"
-                  onChange={handleFileChange}
-                />
-                <div style={{ fontSize: 12 }}>
-                  {fileName || "Drag or Browse .PDB / .MOL2"}
-                </div>
-              </div>
+              />
             </div>
           </div>
 
@@ -176,17 +158,17 @@ export default function PredictionsPage() {
                 fontSize: 12,
               }}
             >
-              Define small molecule properties for docking.
+              ENTER THE LIGAND USING ITS IDENTIFIER FROM THE TARGET STRUCTURE.
             </div>
 
             <div style={{ marginTop: 10 }}>
-              <textarea
-                placeholder="SMILES string / chemical notation"
+              <input
+                type="text"
+                placeholder="Ligand ID (e.g., ATP)"
                 value={smiles}
                 onChange={(e) => setSmiles(e.target.value)}
-                rows={3}
                 style={{
-                  width: "100%",
+                  width: "50%",
                   background: "#071722",
                   color: "#dbeaf6",
                   border: "1px solid #15303a",
@@ -195,75 +177,33 @@ export default function PredictionsPage() {
                 }}
               />
             </div>
-
-            <div
-              style={{
-                display: "flex",
-                gap: 12,
-                marginTop: 10,
-                alignItems: "center",
-              }}
-            >
-              <label
-                style={{
-                  display: "flex",
-                  gap: 6,
-                  alignItems: "center",
-                  color: "#bcd3df",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={virtualScreening}
-                  onChange={(e) => setVirtualScreening(e.target.checked)}
-                />{" "}
-                Enable Virtual Screening
-              </label>
-              <label
-                style={{
-                  display: "flex",
-                  gap: 6,
-                  alignItems: "center",
-                  color: "#bcd3df",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={forceChirality}
-                  onChange={(e) => setForceChirality(e.target.checked)}
-                />{" "}
-                Force Chirality Match
-              </label>
-            </div>
           </div>
 
-          <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
-            <button
-              onClick={runDummyPrediction}
-              disabled={loading}
-              style={{
-                padding: "10px 14px",
-                background: "#0f5a8a",
-                color: "#fff",
-                borderRadius: 6,
-                border: "none",
-              }}
-            >
-              {loading ? "Running…" : "Run prediction (dummy)"}
-            </button>
-
+          <div
+            style={{
+              display: "flex",
+              gap: 12,
+              marginTop: 8,
+              justifyContent: "center",
+            }}
+          >
             <button
               onClick={sendToBackend}
               disabled={sending}
               style={{
-                padding: "10px 14px",
-                background: "#1b7bb0",
-                color: "#fff",
+                marginTop: 8,
+                width: "50%",
+                padding: "12px 10px",
+                background: "#10b5b0",
+                color: "#00292b",
+                fontWeight: 700,
                 borderRadius: 6,
                 border: "none",
+                cursor: "pointer",
+                textTransform: "uppercase",
               }}
             >
-              {sending ? "Sending…" : "Send to backend"}
+              {sending ? "AWAITING RESPONSE" : "PREDICT BINDING AFFINITY"}
             </button>
           </div>
 
@@ -365,7 +305,7 @@ export default function PredictionsPage() {
         >
           <div style={{ textAlign: "center", color: "#cfeffb" }}>
             <div style={{ fontSize: 18, marginBottom: 8 }}>
-              Sending data to backend…
+              AWAITING PREDICTION RESULTS...
             </div>
             <div
               style={{
