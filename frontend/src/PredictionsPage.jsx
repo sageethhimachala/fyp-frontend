@@ -391,7 +391,9 @@ export default function PredictionsPage() {
               {previewLoading ? (
                 "LOADING PREVIEW..."
               ) : previewError ? (
-                <div style={{ color: "#ffb4b4" }}>Preview error</div>
+                <div style={{ color: "#ffb4b4", textTransform: "uppercase" }}>
+                  Invalid PDB ID
+                </div>
               ) : previewHasAtoms && previewPdbString ? (
                 <div style={{ width: "100%", height: "100%" }}>
                   <ProteinLigandViewer

@@ -112,7 +112,12 @@ export default function App() {
         ) : loading && !data ? (
           <div style={{ padding: 20 }}>Loading structure...</div>
         ) : fetchError ? (
-          <div style={{ padding: 20, color: "#ffb4b4" }}>
+          <div
+            style={{
+              padding: 20,
+              color: "#ffb4b4",
+            }}
+          >
             {fetchError === "Enter a valid id"
               ? "Enter a valid id"
               : `Error loading ${id}: ${fetchError}`}
