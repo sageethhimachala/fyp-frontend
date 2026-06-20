@@ -403,7 +403,7 @@ export default function PredictionsPage() {
                   />
                 </div>
               ) : (
-                "WAITING FOR UPLOAD"
+                "ENTER A VALID PDB ID TO PREVIEW"
               )}
             </div>
 
