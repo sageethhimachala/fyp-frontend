@@ -13,9 +13,20 @@ export default function Header() {
   useEffect(() => {
     const prev = prevPath.current;
     const curr = location.pathname || "/";
+
+    // When entering viewer, populate input from state or query string
+    if (prev !== "/viewer" && curr === "/viewer") {
+      const statePdb = location.state?.pdbId;
+      const qsPdb = new URLSearchParams(location.search).get("pdb");
+      const target = (statePdb || qsPdb || "").toUpperCase();
+      if (target) setPdbInput(target);
+    }
+
+    // When leaving viewer, clear input
     if (prev === "/viewer" && curr !== "/viewer") {
       setPdbInput("");
     }
+
     prevPath.current = curr;
   }, [location.pathname]);
 
