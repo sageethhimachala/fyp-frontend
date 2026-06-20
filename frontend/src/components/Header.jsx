@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { Search } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export default function Header() {
   const location = useLocation();
   const current = location.pathname || "/";
+  const navigate = useNavigate();
+  const [pdbInput, setPdbInput] = useState("");
 
   const baseLink = { textDecoration: "none", fontSize: 16 };
   const linkStyle = (path, color) => ({
@@ -60,7 +63,15 @@ export default function Header() {
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
         <input
-          placeholder="PDB ID"
+          placeholder="PDB ID (e.g., 1A2C)"
+          value={pdbInput}
+          onChange={(e) => setPdbInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              const id = pdbInput.trim().toUpperCase();
+              if (id) navigate("/viewer", { state: { pdbId: id } });
+            }
+          }}
           style={{
             background: "#071018",
             border: "1px solid #142128",
@@ -72,6 +83,11 @@ export default function Header() {
         />
 
         <button
+          type="button"
+          onClick={() => {
+            const id = pdbInput.trim().toUpperCase();
+            if (id) navigate("/viewer", { state: { pdbId: id } });
+          }}
           style={{
             background: "#0f6d8c",
             border: "1px solid #1b8db3",
