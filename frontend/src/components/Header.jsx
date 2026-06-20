@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Search } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
@@ -7,6 +7,17 @@ export default function Header() {
   const current = location.pathname || "/";
   const navigate = useNavigate();
   const [pdbInput, setPdbInput] = useState("");
+
+  const prevPath = useRef(location.pathname);
+
+  useEffect(() => {
+    const prev = prevPath.current;
+    const curr = location.pathname || "/";
+    if (prev === "/viewer" && curr !== "/viewer") {
+      setPdbInput("");
+    }
+    prevPath.current = curr;
+  }, [location.pathname]);
 
   const baseLink = { textDecoration: "none", fontSize: 16 };
   const linkStyle = (path, color) => ({

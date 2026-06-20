@@ -40,7 +40,7 @@ export default function App() {
     useEffect(() => {
       const statePdb = location.state?.pdbId;
       const qs = new URLSearchParams(location.search).get("pdb");
-      const targetId = (statePdb || qs || "1A2C").toUpperCase();
+      const targetId = (statePdb || qs || "").toUpperCase();
 
       if (!data || (id && id.toUpperCase() !== targetId)) {
         fetch(`/${targetId}.json`)
