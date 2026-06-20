@@ -36,13 +36,37 @@ export default function App() {
 
   function ViewerWrapper() {
     const location = useLocation();
+    const [loading, setLoading] = useState(false);
+    const [noPdbProvided, setNoPdbProvided] = useState(false);
+    const [fetchError, setFetchError] = useState(null);
 
     useEffect(() => {
       const statePdb = location.state?.pdbId;
       const qs = new URLSearchParams(location.search).get("pdb");
-      const targetId = (statePdb || qs || "").toUpperCase();
+      const rawTarget = statePdb || qs || "";
+      const targetId = rawTarget ? rawTarget.toUpperCase() : "";
 
-      if (!data || (id && id.toUpperCase() !== targetId)) {
+      // If no PDB specified (e.g. user clicked VIEW from header), show prompt
+      if (!targetId) {
+        setNoPdbProvided(true);
+        setLoading(false);
+        setFetchError(null);
+        setData(null);
+        setId(null);
+        return;
+      }
+
+      setNoPdbProvided(false);
+
+      // Avoid refetching same id
+      if (id && id.toUpperCase() === targetId && data) return;
+
+      setLoading(true);
+      setFetchError(null);
+
+      // Simulate network latency when navigation provided a pdbId via state (header search)
+      const simulateDelay = statePdb ? 900 : 0;
+      const timer = setTimeout(() => {
         fetch(`/${targetId}.json`)
           .then((res) => {
             if (!res.ok) throw new Error("Failed to fetch JSON");
@@ -53,19 +77,35 @@ export default function App() {
             setId(targetId);
             setFrameIndex(0);
             setSelectedAtomIndex(null);
+            setFetchError(null);
           })
           .catch((err) => {
             console.error(err);
             setData(null);
             setId(targetId);
-          });
-      }
+            setFetchError(err.message || "Failed to load data");
+          })
+          .finally(() => setLoading(false));
+      }, simulateDelay);
+
+      return () => clearTimeout(timer);
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.key, location.search, location.state]);
 
     return (
       <div>
-        {!data ? (
+        {noPdbProvided ? (
+          <div style={{ padding: 20, color: "#c6f7ff" }}>
+            Please enter a PDB ID in the search box and click search to load a
+            structure.
+          </div>
+        ) : loading && !data ? (
+          <div style={{ padding: 20 }}>Loading structure...</div>
+        ) : fetchError ? (
+          <div style={{ padding: 20, color: "#ffb4b4" }}>
+            Error loading {id}: {fetchError}
+          </div>
+        ) : !data ? (
           <div style={{ padding: 20 }}>Loading MISATO structure...</div>
         ) : (
           <div>
