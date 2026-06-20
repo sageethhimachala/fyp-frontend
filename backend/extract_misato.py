@@ -3,10 +3,10 @@ import json
 import numpy as np
 from pathlib import Path
 
-PDB_ID = "10GS"
+PDB_ID = "1A30"
 QM_FILE = "../data/tiny_qm.hdf5"
 MD_FILE = "../data/tiny_md.hdf5"
-OUT_FILE = "../frontend/public/10GS.json"
+OUT_FILE = f"../frontend/public/{PDB_ID}.json"
 
 def safe_list(x):
     if isinstance(x, np.ndarray):

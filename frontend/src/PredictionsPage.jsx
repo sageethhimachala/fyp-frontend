@@ -6,26 +6,25 @@ export default function PredictionsPage() {
   const [sending, setSending] = useState(false);
   const [result, setResult] = useState(null);
 
-  const [pdbId, setPdbId] = useState("");
-  const [fileName, setFileName] = useState("");
-  const [smiles, setSmiles] = useState("");
+  const [pdbId, setPdbId] = useState(null);
+  const [smiles, setSmiles] = useState(null);
   const [virtualScreening, setVirtualScreening] = useState(false);
   const [forceChirality, setForceChirality] = useState(false);
 
   const fileRef = useRef(null);
   const navigate = useNavigate();
 
+  //dummy function to simulate a prediction run (for testing purposes)
   const runDummyPrediction = async () => {
     setLoading(true);
     setResult(null);
     await new Promise((r) => setTimeout(r, 700));
-    setResult({ score: Math.random().toFixed(3), label: "OK" });
+    const score = Math.random().toFixed(3);
+    const affinity = (-(5 + Math.random() * 7)).toFixed(2); // kcal/mol (negative is stronger)
+    const stability = (Math.random() * 1.5 + 0.05).toFixed(3); // RMSE (lower is better)
+    const label = Number(score) > 0.5 ? "OK" : "LOW";
+    setResult({ label, score, affinity, stability, pdbId });
     setLoading(false);
-  };
-
-  const handleFileChange = (e) => {
-    const f = e.target.files && e.target.files[0];
-    setFileName(f ? f.name : "");
   };
 
   const sendToBackend = async () => {
@@ -36,11 +35,6 @@ export default function PredictionsPage() {
       const form = new FormData();
       form.append("pdbId", pdbId);
       form.append("smiles", smiles);
-      form.append("virtualScreening", virtualScreening);
-      form.append("forceChirality", forceChirality);
-      if (fileRef.current && fileRef.current.files[0]) {
-        form.append("structure", fileRef.current.files[0]);
-      }
 
       // Simulate network delay and response for now
       await new Promise((r) => setTimeout(r, 900));
@@ -49,7 +43,11 @@ export default function PredictionsPage() {
       // const data = await resp.json();
 
       // Dummy response
-      const data = { label: "OK", score: Math.random().toFixed(3) };
+      const score = Math.random().toFixed(3);
+      const affinity = (-(5 + Math.random() * 7)).toFixed(2);
+      const stability = (Math.random() * 1.5 + 0.05).toFixed(3);
+      const label = Number(score) > 0.5 ? "OK" : "LOW";
+      const data = { label, score, affinity, stability, pdbId };
       setResult(data);
     } catch (err) {
       setResult({ label: "ERROR", score: "-" });
@@ -210,16 +208,102 @@ export default function PredictionsPage() {
           {result && (
             <div
               style={{
-                marginTop: 12,
-                border: "1px solid #23303a",
-                padding: 12,
-                borderRadius: 8,
-                background: "#071722",
+                marginTop: 14,
+                padding: 14,
+                borderRadius: 10,
+                background: "linear-gradient(180deg,#071722,#031017)",
+                border: "1px solid rgba(35,48,58,0.6)",
+                boxShadow: "0 6px 18px rgba(3,10,16,0.6)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 16,
               }}
             >
-              <strong>Result:</strong>
-              <div>Label: {result.label}</div>
-              <div>Score: {result.score}</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                <div
+                  style={{ color: "#9fc7dd", fontWeight: 800, fontSize: 13 }}
+                >
+                  Prediction Result
+                </div>
+
+                <div style={{ fontSize: 13, color: "#cfeffb" }}>
+                  <strong style={{ color: "#9fe7ff" }}>PDB:</strong>{" "}
+                  {result.pdbId || pdbId || "—"}
+                </div>
+
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div
+                    style={{
+                      padding: "6px 10px",
+                      borderRadius: 999,
+                      fontWeight: 800,
+                      fontSize: 13,
+                      color: result.label === "OK" ? "#00292b" : "#fff",
+                      background: result.label === "OK" ? "#10b5b0" : "#e11d48",
+                    }}
+                  >
+                    {result.label}
+                  </div>
+
+                  <div style={{ color: "#cfeffb", fontSize: 13 }}>
+                    {result.label === "OK"
+                      ? "Predicted binder — review affinity & stability"
+                      : "Low confidence prediction — consider re-running"}
+                  </div>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  minWidth: 220,
+                  gap: 8,
+                  alignItems: "flex-end",
+                }}
+              >
+                <div
+                  style={{ color: "#9fe7ff", fontSize: 22, fontWeight: 900 }}
+                >
+                  {result.score}
+                </div>
+                <div style={{ color: "#9fbcc9", fontSize: 12 }}>
+                  Binding score
+                </div>
+
+                <div style={{ display: "flex", gap: 12, marginTop: 6 }}>
+                  <div style={{ textAlign: "right" }}>
+                    <div
+                      style={{
+                        color: "#cfeffb",
+                        fontSize: 15,
+                        fontWeight: 800,
+                      }}
+                    >
+                      {result.affinity} kcal/mol
+                    </div>
+                    <div style={{ color: "#9fbcc9", fontSize: 12 }}>
+                      Affinity
+                    </div>
+                  </div>
+
+                  <div style={{ textAlign: "right" }}>
+                    <div
+                      style={{
+                        color: "#cfeffb",
+                        fontSize: 15,
+                        fontWeight: 800,
+                      }}
+                    >
+                      {result.stability}
+                    </div>
+                    <div style={{ color: "#9fbcc9", fontSize: 12 }}>
+                      Stability (RMSE)
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </div>

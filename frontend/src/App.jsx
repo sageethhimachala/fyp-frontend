@@ -9,12 +9,13 @@ import PredictionsPage from "./PredictionsPage";
 import Header from "./components/Header";
 
 export default function App() {
+  const [id, setId] = useState(null);
   const [data, setData] = useState(null);
   const [selectedAtomIndex, setSelectedAtomIndex] = useState(null);
   const [frameIndex, setFrameIndex] = useState(0);
 
   useEffect(() => {
-    fetch("/10GS.json")
+    fetch("/1A2C.json")
       .then((res) => res.json())
       .then((data) => setData(data));
   }, []);
