@@ -9,7 +9,8 @@ export default function PredictionsPage() {
   const [result, setResult] = useState(null);
 
   const [pdbId, setPdbId] = useState(null);
-  const [smiles, setSmiles] = useState(null);
+  const [ligandCsv, setLigandCsv] = useState(null);
+  const [ligandTxt, setLigandTxt] = useState(null);
   const [virtualScreening, setVirtualScreening] = useState(false);
   const [forceChirality, setForceChirality] = useState(false);
 
@@ -75,10 +76,13 @@ export default function PredictionsPage() {
     setResult(null);
     await new Promise((r) => setTimeout(r, 700));
     const score = Math.random().toFixed(3);
-    const affinity = (-(5 + Math.random() * 7)).toFixed(2); // kcal/mol (negative is stronger)
-    const stability = (Math.random() * 1.5 + 0.05).toFixed(3); // RMSE (lower is better)
     const label = Number(score) > 0.5 ? "OK" : "LOW";
-    setResult({ label, score, affinity, stability, pdbId });
+    // generate dummy affinity in pKa (0-14) and stability in RMSE
+    const affinity_pKa = (Math.random() * 14).toFixed(2);
+    const stability_rmse = (Math.random() * 1.5 + 0.05).toFixed(3);
+    const message =
+      label === "OK" ? "Prediction successful" : "Low confidence prediction";
+    setResult({ message, affinity_pKa, stability_rmse });
     setLoading(false);
   };
 
@@ -88,8 +92,10 @@ export default function PredictionsPage() {
     try {
       // Build form data (placeholder). Replace URL with your backend endpoint.
       const form = new FormData();
-      form.append("pdbId", pdbId);
-      form.append("smiles", smiles);
+      form.append("pdbId", pdbId || "");
+      // attach ligand files (CSV + TXT) if provided
+      if (ligandCsv) form.append("ligand_csv", ligandCsv);
+      if (ligandTxt) form.append("ligand_txt", ligandTxt);
 
       // Simulate network delay and response for now
       await new Promise((r) => setTimeout(r, 900));
@@ -99,10 +105,16 @@ export default function PredictionsPage() {
 
       // Dummy response
       const score = Math.random().toFixed(3);
-      const affinity = (-(5 + Math.random() * 7)).toFixed(2);
-      const stability = (Math.random() * 1.5 + 0.05).toFixed(3);
       const label = Number(score) > 0.5 ? "OK" : "LOW";
-      const data = { label, score, affinity, stability, pdbId };
+      const affinity_pKa = (Math.random() * 14).toFixed(2);
+      const stability_rmse = (Math.random() * 1.5 + 0.05).toFixed(3);
+      const message =
+        label === "OK" ? "Prediction successful" : "Low confidence prediction";
+      const data = {
+        message,
+        affinity_pKa,
+        stability_rmse,
+      };
       setResult(data);
     } catch (err) {
       setResult({ label: "ERROR", score: "-" });
@@ -214,21 +226,68 @@ export default function PredictionsPage() {
               ENTER THE LIGAND USING ITS IDENTIFIER FROM THE TARGET STRUCTURE.
             </div>
 
-            <div style={{ marginTop: 10 }}>
+            <div
+              style={{
+                marginTop: 10,
+                display: "flex",
+                flexDirection: "column",
+                gap: 8,
+                alignItems: "flex-start",
+              }}
+            >
+              <label style={{ fontSize: 12, color: "#cfeffb" }}>
+                Upload ligand CSV
+              </label>
               <input
-                type="text"
-                placeholder="Ligand ID (e.g., ATP)"
-                value={smiles}
-                onChange={(e) => setSmiles(e.target.value)}
+                type="file"
+                accept=".csv"
+                onChange={(e) =>
+                  setLigandCsv(
+                    e.target.files && e.target.files[0]
+                      ? e.target.files[0]
+                      : null,
+                  )
+                }
                 style={{
-                  width: "50%",
+                  width: "80%",
                   background: "#071722",
                   color: "#dbeaf6",
                   border: "1px solid #15303a",
-                  padding: 8,
+                  padding: 6,
                   borderRadius: 6,
                 }}
               />
+
+              <div style={{ color: "#9fbcc9", fontSize: 12 }}>
+                {ligandCsv ? `CSV: ${ligandCsv.name}` : "No CSV selected"}
+              </div>
+
+              <label style={{ fontSize: 12, color: "#cfeffb" }}>
+                Upload ligand TXT
+              </label>
+              <input
+                type="file"
+                accept=".txt"
+                onChange={(e) =>
+                  setLigandTxt(
+                    e.target.files && e.target.files[0]
+                      ? e.target.files[0]
+                      : null,
+                  )
+                }
+                style={{
+                  width: "80%",
+                  background: "#071722",
+                  color: "#dbeaf6",
+                  border: "1px solid #15303a",
+                  padding: 6,
+                  borderRadius: 6,
+                }}
+              />
+
+              <div style={{ color: "#9fbcc9", fontSize: 12 }}>
+                {ligandTxt ? `TXT: ${ligandTxt.name}` : "No TXT selected"}
+              </div>
             </div>
           </div>
 
@@ -264,98 +323,89 @@ export default function PredictionsPage() {
             <div
               style={{
                 marginTop: 14,
-                padding: 14,
-                borderRadius: 10,
-                background: "linear-gradient(180deg,#071722,#031017)",
-                border: "1px solid rgba(35,48,58,0.6)",
-                boxShadow: "0 6px 18px rgba(3,10,16,0.6)",
+                padding: 16,
+                borderRadius: 12,
+                background: "linear-gradient(180deg,#081620,#04141a)",
+                border: "1px solid rgba(20,40,50,0.6)",
+                boxShadow: "0 8px 30px rgba(2,10,14,0.6)",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "space-between",
-                gap: 16,
+                gap: 18,
               }}
             >
-              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                 <div
-                  style={{ color: "#9fc7dd", fontWeight: 800, fontSize: 13 }}
+                  style={{
+                    width: 56,
+                    height: 56,
+                    borderRadius: 12,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontWeight: 900,
+                    color:
+                      result.message === "Prediction successful"
+                        ? "#00292b"
+                        : "#fff",
+                    background:
+                      result.message === "Prediction successful"
+                        ? "#10b5b0"
+                        : "#e11d48",
+                    boxShadow: "0 6px 18px rgba(0,0,0,0.4)",
+                    fontSize: 20,
+                  }}
                 >
-                  Prediction Result
+                  {result.message === "Prediction successful" ? "✓" : "!"}
                 </div>
 
-                <div style={{ fontSize: 13, color: "#cfeffb" }}>
-                  <strong style={{ color: "#9fe7ff" }}>PDB:</strong>{" "}
-                  {result.pdbId || pdbId || "—"}
-                </div>
-
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div style={{ display: "flex", flexDirection: "column" }}>
                   <div
-                    style={{
-                      padding: "6px 10px",
-                      borderRadius: 999,
-                      fontWeight: 800,
-                      fontSize: 13,
-                      color: result.label === "OK" ? "#00292b" : "#fff",
-                      background: result.label === "OK" ? "#10b5b0" : "#e11d48",
-                    }}
+                    style={{ color: "#9fc7dd", fontWeight: 800, fontSize: 13 }}
                   >
-                    {result.label}
+                    Prediction Result
                   </div>
-
-                  <div style={{ color: "#cfeffb", fontSize: 13 }}>
-                    {result.label === "OK"
-                      ? "Predicted binder — review affinity & stability"
-                      : "Low confidence prediction — consider re-running"}
+                  <div style={{ color: "#cfeffb", fontSize: 14, marginTop: 6 }}>
+                    {result.message}
                   </div>
                 </div>
               </div>
 
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  minWidth: 220,
-                  gap: 8,
-                  alignItems: "flex-end",
-                }}
-              >
+              <div style={{ display: "flex", gap: 12, marginLeft: "auto" }}>
                 <div
-                  style={{ color: "#9fe7ff", fontSize: 22, fontWeight: 900 }}
+                  style={{
+                    minWidth: 160,
+                    padding: 12,
+                    borderRadius: 10,
+                    background: "linear-gradient(180deg,#041e24,#032028)",
+                    border: "1px solid rgba(18,45,52,0.6)",
+                  }}
                 >
-                  {result.score}
-                </div>
-                <div style={{ color: "#9fbcc9", fontSize: 12 }}>
-                  Binding score
-                </div>
-
-                <div style={{ display: "flex", gap: 12, marginTop: 6 }}>
-                  <div style={{ textAlign: "right" }}>
-                    <div
-                      style={{
-                        color: "#cfeffb",
-                        fontSize: 15,
-                        fontWeight: 800,
-                      }}
-                    >
-                      {result.affinity} kcal/mol
-                    </div>
-                    <div style={{ color: "#9fbcc9", fontSize: 12 }}>
-                      Affinity
-                    </div>
+                  <div
+                    style={{ color: "#9fe7ff", fontSize: 20, fontWeight: 900 }}
+                  >
+                    {result.affinity_pKa} pKa
                   </div>
+                  <div style={{ color: "#8fb9c6", fontSize: 12, marginTop: 6 }}>
+                    Binding affinity
+                  </div>
+                </div>
 
-                  <div style={{ textAlign: "right" }}>
-                    <div
-                      style={{
-                        color: "#cfeffb",
-                        fontSize: 15,
-                        fontWeight: 800,
-                      }}
-                    >
-                      {result.stability}
-                    </div>
-                    <div style={{ color: "#9fbcc9", fontSize: 12 }}>
-                      Stability (RMSE)
-                    </div>
+                <div
+                  style={{
+                    minWidth: 140,
+                    padding: 12,
+                    borderRadius: 10,
+                    background: "linear-gradient(180deg,#041e24,#032028)",
+                    border: "1px solid rgba(18,45,52,0.6)",
+                  }}
+                >
+                  <div
+                    style={{ color: "#9fe7ff", fontSize: 20, fontWeight: 900 }}
+                  >
+                    {result.stability_rmse}
+                  </div>
+                  <div style={{ color: "#8fb9c6", fontSize: 12, marginTop: 6 }}>
+                    Stability (RMSE)
                   </div>
                 </div>
               </div>
@@ -410,7 +460,15 @@ export default function PredictionsPage() {
             <button
               onClick={() =>
                 navigate("/viewer", {
-                  state: { pdbId, smiles, virtualScreening, forceChirality },
+                  state: {
+                    pdbId,
+                    ligandFiles: {
+                      csv: ligandCsv ? ligandCsv.name : null,
+                      txt: ligandTxt ? ligandTxt.name : null,
+                    },
+                    virtualScreening,
+                    forceChirality,
+                  },
                 })
               }
               style={{
