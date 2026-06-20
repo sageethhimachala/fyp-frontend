@@ -69,7 +69,17 @@ export default function App() {
       const timer = setTimeout(() => {
         fetch(`/${targetId}.json`)
           .then((res) => {
-            if (!res.ok) throw new Error("Failed to fetch JSON");
+            if (!res.ok) {
+              // show user-friendly message for not found
+              if (res.status === 404) throw new Error("Enter a valid id");
+              throw new Error("Failed to load data");
+            }
+            // Some servers (dev) may return HTML (index.html) with 200 status.
+            // Treat non-JSON responses as invalid ID to avoid JSON parse errors.
+            const ct = (res.headers.get("content-type") || "").toLowerCase();
+            if (!ct.includes("application/json")) {
+              throw new Error("Enter a valid id");
+            }
             return res.json();
           })
           .then((d) => {
@@ -103,7 +113,9 @@ export default function App() {
           <div style={{ padding: 20 }}>Loading structure...</div>
         ) : fetchError ? (
           <div style={{ padding: 20, color: "#ffb4b4" }}>
-            Error loading {id}: {fetchError}
+            {fetchError === "Enter a valid id"
+              ? "Enter a valid id"
+              : `Error loading ${id}: ${fetchError}`}
           </div>
         ) : !data ? (
           <div style={{ padding: 20 }}>Loading MISATO structure...</div>
