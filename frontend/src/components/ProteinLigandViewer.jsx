@@ -4,6 +4,7 @@ export default function ProteinLigandViewer({
   pdbData,
   atoms = [],
   selectedAtomIndex = null,
+  height = "620px",
 }) {
   const containerRef = useRef(null);
   const viewerRef = useRef(null);
@@ -95,7 +96,7 @@ export default function ProteinLigandViewer({
       ref={containerRef}
       style={{
         width: "100%",
-        height: "620px",
+        height: typeof height === "number" ? `${height}px` : height,
         border: "1px solid #23303a",
         borderRadius: "12px",
         overflow: "hidden",

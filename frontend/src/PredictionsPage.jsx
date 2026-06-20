@@ -1,5 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import ProteinLigandViewer from "./components/ProteinLigandViewer";
+import { atomsToPDB } from "./components/atomsToPDB";
 
 export default function PredictionsPage() {
   const [loading, setLoading] = useState(false);
@@ -13,6 +15,59 @@ export default function PredictionsPage() {
 
   const fileRef = useRef(null);
   const navigate = useNavigate();
+
+  const [previewData, setPreviewData] = useState(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewError, setPreviewError] = useState(null);
+  const previewHeight = 320;
+
+  useEffect(() => {
+    const id = pdbId ? pdbId.trim().toUpperCase() : "";
+    if (id.length === 4) {
+      setPreviewLoading(true);
+      setPreviewError(null);
+      fetch(`/${id}.json`)
+        .then((res) => {
+          if (!res.ok) throw new Error("Not found");
+          return res.json();
+        })
+        .then((d) => setPreviewData(d))
+        .catch((err) => {
+          console.error(err);
+          setPreviewData(null);
+          setPreviewError(err.message || "Failed to load preview");
+        })
+        .finally(() => setPreviewLoading(false));
+    } else {
+      setPreviewData(null);
+      setPreviewError(null);
+      setPreviewLoading(false);
+    }
+  }, [pdbId]);
+
+  // derive preview PDB string and atoms/coordinates for rendering (use frame 0)
+  const previewHasAtoms =
+    previewData &&
+    Array.isArray(previewData.atoms) &&
+    previewData.atoms.length > 0;
+  let previewPdbString = null;
+  let previewAtoms = [];
+  if (previewHasAtoms) {
+    previewAtoms = previewData.atoms;
+    const coords =
+      previewData.md_frames && previewData.md_frames.length
+        ? previewData.md_frames[0]
+        : previewData.qm_coordinates || null;
+    previewPdbString = atomsToPDB(
+      previewAtoms.map((a, i) => ({
+        ...a,
+        x: coords ? coords[i][0] : a.x,
+        y: coords ? coords[i][1] : a.y,
+        z: coords ? coords[i][2] : a.z,
+      })),
+      coords,
+    );
+  }
 
   //dummy function to simulate a prediction run (for testing purposes)
   const runDummyPrediction = async () => {
@@ -323,7 +378,7 @@ export default function PredictionsPage() {
             </div>
             <div
               style={{
-                height: 140,
+                height: previewHeight,
                 background: "linear-gradient(135deg,#07212a,#0c2730)",
                 borderRadius: 6,
                 marginBottom: 12,
@@ -333,22 +388,21 @@ export default function PredictionsPage() {
                 color: "#95d3e8",
               }}
             >
-              WAITING FOR UPLOAD
-            </div>
-
-            <div style={{ textAlign: "left", color: "#bcd3df", fontSize: 13 }}>
-              <div style={{ marginBottom: 6 }}>
-                <strong>COMPUTE BUDGET</strong>
-                <div style={{ color: "#9fbcc9" }}>12.5 TFLOPS</div>
-              </div>
-              <div style={{ marginBottom: 6 }}>
-                <strong>EST. TIME</strong>
-                <div style={{ color: "#9fbcc9" }}>14m 22s</div>
-              </div>
-              <div style={{ marginBottom: 12 }}>
-                <strong>SOLVENT MODEL</strong>
-                <div style={{ color: "#9fbcc9" }}>TIP3P (Explicit)</div>
-              </div>
+              {previewLoading ? (
+                "LOADING PREVIEW..."
+              ) : previewError ? (
+                <div style={{ color: "#ffb4b4" }}>Preview error</div>
+              ) : previewHasAtoms && previewPdbString ? (
+                <div style={{ width: "100%", height: "100%" }}>
+                  <ProteinLigandViewer
+                    pdbData={previewPdbString}
+                    atoms={previewAtoms}
+                    height={previewHeight}
+                  />
+                </div>
+              ) : (
+                "WAITING FOR UPLOAD"
+              )}
             </div>
 
             <button
