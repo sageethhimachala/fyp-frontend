@@ -15,98 +15,11 @@ export default function Landing() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "220px 1fr 300px",
+          gridTemplateColumns: "1fr 300px",
           gap: 20,
           padding: 28,
         }}
       >
-        {/* Left sidebar */}
-        <aside
-          style={{
-            background: "#071018",
-            borderRadius: 12,
-            padding: 18,
-            border: "1px solid #15242a",
-            height: "calc(100vh - 120px)",
-          }}
-        >
-          <div
-            style={{
-              fontSize: 14,
-              fontWeight: 700,
-              color: "#aeeefb",
-              marginBottom: 20,
-            }}
-          >
-            Project Helix
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            <Link
-              to="/"
-              style={{
-                color: "#9fd5e9",
-                textDecoration: "none",
-                background: "linear-gradient(90deg,#0f2a2f,transparent)",
-                padding: "10px",
-                borderRadius: 8,
-              }}
-            >
-              Dashboard
-            </Link>
-            <Link
-              to="/viewer"
-              style={{
-                color: "#9fd5e9",
-                textDecoration: "none",
-                padding: "10px",
-                borderRadius: 8,
-              }}
-            >
-              Molecular View
-            </Link>
-            <Link
-              to="/predictions"
-              style={{
-                color: "#9fd5e9",
-                textDecoration: "none",
-                padding: "10px",
-                borderRadius: 8,
-              }}
-            >
-              Binding Affinity
-            </Link>
-            <Link
-              to="/history"
-              style={{
-                color: "#9fd5e9",
-                textDecoration: "none",
-                padding: "10px",
-                borderRadius: 8,
-              }}
-            >
-              Sequence Analysis
-            </Link>
-            <div
-              style={{
-                height: 1,
-                background: "rgba(255,255,255,0.03)",
-                margin: "12px 0",
-              }}
-            />
-            <Link
-              to="/history"
-              style={{
-                color: "#9fd5e9",
-                textDecoration: "none",
-                padding: "10px",
-                borderRadius: 8,
-              }}
-            >
-              Archive
-            </Link>
-          </div>
-        </aside>
-
         {/* Main content */}
         <main style={{ minHeight: 600 }}>
           <div

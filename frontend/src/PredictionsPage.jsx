@@ -198,7 +198,7 @@ export default function PredictionsPage() {
             >
               <input
                 type="text"
-                placeholder="PDB ID (e.g., 6LU7)"
+                placeholder="PDB ID (e.g., 10GS)"
                 value={pdbId}
                 onChange={(e) => setPdbId(e.target.value)}
                 style={{

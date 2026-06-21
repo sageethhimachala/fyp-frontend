@@ -1,0 +1,113 @@
+{
+  "pdbId": "1STP",
+  "atoms": [
+    {
+      "serial": 1,
+      "atom": "N",
+      "elem": "N",
+      "resn": "GLU",
+      "resi": 13,
+      "chain": "A",
+      "hetflag": false,
+      "x": 25.109,
+      "y": 38.324,
+      "z": 24.521
+    },
+    {
+      "serial": 2,
+      "atom": "CA",
+      "elem": "C",
+      "resn": "GLU",
+      "resi": 13,
+      "chain": "A",
+      "hetflag": false,
+      "x": 26.548,
+      "y": 38.164,
+      "z": 24.316
+    },
+    {
+      "serial": 3,
+      "atom": "C",
+      "elem": "C",
+      "resn": "GLU",
+      "resi": 13,
+      "chain": "A",
+      "hetflag": false,
+      "x": 27.279,
+      "y": 39.467,
+      "z": 23.978
+    },
+    {
+      "serial": 4,
+      "atom": "O",
+      "elem": "O",
+      "resn": "GLU",
+      "resi": 13,
+      "chain": "A",
+      "hetflag": false,
+      "x": 27.016,
+      "y": 40.505,
+      "z": 24.571
+    },
+    {
+      "serial": 5,
+      "atom": "CB",
+      "elem": "C",
+      "resn": "GLU",
+      "resi": 13,
+      "chain": "A",
+      "hetflag": false,
+      "x": 26.839,
+      "y": 37.086,
+      "z": 23.278
+    },
+    {
+      "serial": 6,
+      "atom": "CG",
+      "elem": "C",
+      "resn": "GLU",
+      "resi": 13,
+      "chain": "A",
+      "hetflag": false,
+      "x": 25.803,
+      "y": 35.975,
+      "z": 23.284
+    },
+    {
+      "serial": 7,
+      "atom": "CD",
+      "elem": "C",
+      "resn": "GLU",
+      "resi": 13,
+      "chain": "A",
+      "hetflag": false,
+      "x": 26.113,
+      "y": 34.823,
+      "z": 22.338
+    },
+    {
+      "serial": 8,
+      "atom": "OE1",
+      "elem": "O",
+      "resn": "GLU",
+      "resi": 13,
+      "chain": "A",
+      "hetflag": false,
+      "x": 27.291,
+      "y": 34.409,
+      "z": 22.285
+    },
+    {
+      "serial": 9,
+      "atom": "OE2",
+      "elem": "O",
+      "resn": "GLU",
+      "resi": 13,
+      "chain": "A",
+      "hetflag": false,
+      "x": 25.176,
+      "y": 34.331,
+      "z": 21.650
+    }
+  ]
+}
